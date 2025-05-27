@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binärzahlen mit Glühbirnen</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .lightbulb-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .lightbulb-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .lightbulb {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: linear-gradient(135deg, #444, #222);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbulb::before {
+            content: '💡';
+            font-size: 2.5rem;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .lightbulb.on {
+            background: linear-gradient(135deg, #ffeb3b, #ffc107);
+            border-color: #ff9800;
+            box-shadow: 0 0 30px rgba(255, 235, 59, 0.8), 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .lightbulb.on::before {
+            opacity: 1;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 30px rgba(255, 235, 59, 0.6), 0 4px 15px rgba(0, 0, 0, 0.3); }
+            to { box-shadow: 0 0 40px rgba(255, 235, 59, 0.8), 0 4px 15px rgba(0, 0, 0, 0.3); }
+        }
+
+        .lightbulb:hover {
+            transform: scale(1.1);
+        }
+
+        .bit-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffc107;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 2px solid #ffc107;
+        }
+
+        .power-label {
+            display: none;
+        }
+
+        .result-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .binary-display {
+            font-size: 2rem;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1rem;
+            color: #4fc3f7;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .decimal-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #66bb6a;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .explanation {
+            display: none;
+        }
+
+        .reset-btn {
+            background: linear-gradient(145deg, #ff5722, #d84315);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .lightbulb-container {
+                gap: 15px;
+            }
+            
+            .lightbulb {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .lightbulb::before {
+                font-size: 2rem;
+            }
+            
+            .bit-value {
+                font-size: 1.3rem;
+                padding: 4px 8px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .decimal-display {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💡 Binäre Glühbirnen 💡</h1>
+        <p class="subtitle">Klicke auf die Glühbirnen um Binärzahlen zu lernen!</p>
+        
+        <div class="lightbulb-container" id="lightbulbContainer">
+            <!-- Lightbulbs will be generated by JavaScript -->
+        </div>
+        
+        <div class="result-section">
+            <div class="binary-display" id="binaryDisplay">00000</div>
+            <div>Binär → Dezimal</div>
+            <div class="decimal-display" id="decimalDisplay">0</div>
+            <div class="explanation" id="explanation">
+                Click the lightbulbs above to turn them on (1) or off (0). Each position represents a power of 2!
+            </div>
+            <button class="reset-btn" onclick="resetAll()">Alle zurücksetzen</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize with 5 lightbulbs (representing 5-bit binary)
+        const numBulbs = 5;
+        let bulbStates = new Array(numBulbs).fill(false);
+
+        function createLightbulbs() {
+            const container = document.getElementById('lightbulbContainer');
+            
+            for (let i = 0; i < numBulbs; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'lightbulb-wrapper';
+                
+                const bulb = document.createElement('div');
+                bulb.className = 'lightbulb';
+                bulb.id = `bulb-${i}`;
+                bulb.onclick = () => toggleBulb(i);
+                
+                const bitValue = document.createElement('div');
+                bitValue.className = 'bit-value';
+                bitValue.id = `bit-${i}`;
+                bitValue.textContent = '0';
+                
+                const powerLabel = document.createElement('div');
+                powerLabel.className = 'power-label';
+                powerLabel.textContent = `2^${numBulbs - 1 - i}`;
+                
+                wrapper.appendChild(bulb);
+                wrapper.appendChild(bitValue);
+                wrapper.appendChild(powerLabel);
+                container.appendChild(wrapper);
+            }
+        }
+
+        function toggleBulb(index) {
+            bulbStates[index] = !bulbStates[index];
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            let binaryString = '';
+            let decimalValue = 0;
+            
+            for (let i = 0; i < numBulbs; i++) {
+                const bulb = document.getElementById(`bulb-${i}`);
+                const bitDisplay = document.getElementById(`bit-${i}`);
+                
+                if (bulbStates[i]) {
+                    bulb.classList.add('on');
+                    bitDisplay.textContent = '1';
+                    binaryString += '1';
+                    decimalValue += Math.pow(2, numBulbs - 1 - i);
+                } else {
+                    bulb.classList.remove('on');
+                    bitDisplay.textContent = '0';
+                    binaryString += '0';
+                }
+            }
+            
+            document.getElementById('binaryDisplay').textContent = binaryString;
+            document.getElementById('decimalDisplay').textContent = decimalValue;
+            
+            updateExplanation(decimalValue, binaryString);
+        }
+
+        function updateExplanation(decimal, binary) {
+            // Explanation is hidden, no need to update
+        }
+
+        function resetAll() {
+            bulbStates.fill(false);
+            updateDisplay();
+        }
+
+        // Initialize the application
+        createLightbulbs();
+        updateDisplay();
+    </script>
+</body>
+</html>
